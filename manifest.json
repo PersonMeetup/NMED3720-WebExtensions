@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "Web Extensions Assignment",
+    "version": "1.0.0",
+    "description": "Modify title and description later",
+    "web_accessible_resources": [
+        {
+            "resources": ["css/*"],
+            "matches": ["https://nitter.net/*", "https://twitter.com/*"]
+        }
+    ],
+    "content_scripts": [
+        {
+            "matches": ["https://nitter.net/*", "https://twitter.com/*"],
+            "js": ["script.js"]
+        }
+    ],
+    "action": {
+        "default_popup": "popup.html"
+    }
+}
