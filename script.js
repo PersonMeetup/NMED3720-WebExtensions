@@ -1,4 +1,4 @@
-let posts = document.querySelectorAll('.timeline-item');
+let posts = document.querySelectorAll('.timeline-item:not(.show-more)');
 let maxLikes = 0;
 
 for (const post of posts) {
