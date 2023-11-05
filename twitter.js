@@ -12,17 +12,23 @@ function statPuller(post, stat, type) {
     return num;
 }
 
-function main() {
-    let posts = document.querySelectorAll('[data-testid="cellInnerDiv"]');
+function chromeFetch(property) {
+	return new Promise(function(resolve) {
+		chrome.storage.local.get(property, function(obj) {
+			resolve(obj[property]);
+		});
+	});
+}
 
+function init() {
     for (const post of posts) {
         /**
          * Stats Array Reference
          * 
-         * 0: Replies /
-         * 1: Retweets /
-         * 2: Quotes /
-         * 3: Likes
+         * [0] Replies /
+         * [1] Retweets /
+         * [2] Quotes /
+         * [3] Likes
          */
         const stats = post.querySelector('.css-1dbjc4n')
             .querySelectorAll('.r-1777fci');
@@ -44,35 +50,53 @@ function main() {
             }
         }
     }
+}
+
+async function display() {
+    let replyThreshold = await chromeFetch("threshold");
 
     for (const post of posts) {
+        // const text = post.querySelector('.tweet-content');
         const likes = post.getAttribute('data-likes');
-        const replies = post.getAttribute('data-replies');
+        const replies = post.getAttribute('data-comment');
 
         const likeRatio = likes / maxLikes;
         const replyRatio = replies / likes;
 
-        post.style.opacity = replyRatio >= likeRatio ? replyRatio : likeRatio;
+        post.style.opacity = likeRatio;
+        // if (replyRatio >= replyThreshold)
+        //     text.style.fontSize = replyRatio / replyThreshold + 'em';
+        // else {
+        //     post.style.opacity = likeRatio;
+        //     text.style.fontSize = '1em';
+        // }
     }
 }
-
-
 
 const callback = function(mutations) {
     mutations.forEach(mutation => {
         if (mutation.type === 'childList') {
-            console.log("Holly!");
+            let posts = document.querySelectorAll('[data-testid="cellInnerDiv"]');
+            console.log(posts);
         }
     });
 }
 
-const target = document.querySelector('main');
+const target = document.getElementById('react-root');
 let maxLikes = 0;
 
 const config = {
-    attributes: true, 
+    attributes: false, 
     childList: true, 
-    characterData: true
+    characterData: true,
+    subtree: true
 };
 const observer = new MutationObserver(callback);
 observer.observe(target, config);
+
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if (request.subject === 'update' && request.message === 'threshold')
+            display();
+    }
+);
