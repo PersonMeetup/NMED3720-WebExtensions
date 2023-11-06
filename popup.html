@@ -1,14 +1,30 @@
 <html>
     <head>
-        <title>Twitter</title>
+        <title>Bitter</title>
+        <link rel="stylesheet" href="assets/style.css">
     </head>
     <body>
-        <h1>Hello, world!</h1>
-        <div>
-            <input type="range" name="threshold" min="0" max=".3" step=".005" />
-            <label for="threshold">Reply Threshold</label>
-        </div>
-        <button type="button" id="style">Toggle Styling</button>
+        <header>
+            <h1>Bitter</h1>
+        </header>
+        <main>
+            <div class="slider">
+                <div>
+                    <input type="range" name="threshold" min="0" max=".3" step=".005" />
+                    <label for="threshold">Reply Threshold</label>
+                </div>
+                <span id="value">0.195</span>
+            </div>
+            <div class="buttons">
+                <button type="button" id="invert">Invert Threshold</button>
+                <button type="button" id="style">Toggle Styling</button>
+            </div>
+        </main>
+        <footer>
+            <p>Built by Leslie "<a href="https://personmeetup.ca/">Person Meetup</a>" Swan</p>
+            <p>Created for "The Dynamic Web" at <a href="https://www.ulethbridge.ca/">uLeth</a></p>
+            <p>For more details, check the <a href="https://github.com/PersonMeetup/NMED3720-WebExtensions">GitHub repo</a></p>
+        </footer>
         <script src="popup.js"></script>
     </body>
 </html>

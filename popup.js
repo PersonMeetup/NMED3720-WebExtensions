@@ -1,6 +1,25 @@
 const replySlider = document.querySelector('[name="threshold"]');
+const valueSlider = document.querySelector('#value');
 const styleButton = document.querySelector('#style');
+const invrtButton = document.querySelector('#invert');
 
+// https://bobbyhadz.com/blog/javascript-add-trailing-zeros-to-number
+function addTrailingZeros(num, totalLength) {
+  return String(num).padEnd(totalLength, '0');
+}
+
+function chromeNotify() {
+	chrome.tabs.query({
+		active: true,
+		currentWindow: true
+	}, function(tabs) {
+		chrome.tabs.sendMessage(
+			tabs[0].id, {
+				subject: "update"
+			}
+		)
+	});
+}
 function chromeFetch(property) {
 	return new Promise(function(resolve) {
 		chrome.storage.local.get(property, function(obj) {
@@ -8,40 +27,29 @@ function chromeFetch(property) {
 		});
 	});
 }
+
 function thresholdStore() {
 	chrome.storage.local.set({
 		threshold: replySlider.value
 	});
-	chrome.tabs.query({
-		active: true,
-		currentWindow: true
-	}, function(tabs) {
-		chrome.tabs.sendMessage(
-			tabs[0].id, {
-				subject: "update",
-				message: "threshold"
-			}
-		)
-	})
+	chromeNotify();
+	valueSlider.innerText = addTrailingZeros(replySlider.value, 5);
 }
 function styleStore() {
 	let bool = !(/true/).test(styleButton.getAttribute('aria-pressed'));
-	console.log(bool);
 	styleButton.setAttribute('aria-pressed', bool);
 	chrome.storage.local.set({
 		style: bool
 	});
-	chrome.tabs.query({
-		active: true,
-		currentWindow: true
-	}, function(tabs) {
-		chrome.tabs.sendMessage(
-			tabs[0].id, {
-				subject: "update",
-				message: "style"
-			}
-		)
-	})
+	chromeNotify();
+}
+function invrtStore() {
+	let bool = !(/true/).test(invrtButton.getAttribute('aria-pressed'));
+	invrtButton.setAttribute('aria-pressed', bool);
+	chrome.storage.local.set({
+		invert: bool
+	});
+	chromeNotify();
 }
 
 async function sliderInit() {
@@ -50,10 +58,13 @@ async function sliderInit() {
 		replySlider.value = threshold;
 	else
 		replySlider.value = 0.1;
+	valueSlider.innerText = addTrailingZeros(replySlider.value, 5);
 }
 async function buttonInit() {
-	let bool = await chromeFetch("style");
-	styleButton.ariaPressed = bool; // Is this prepped to work on fresh installs?
+	let styleBool = await chromeFetch("style");
+	let invrtBool = await chromeFetch("invert");
+	styleButton.ariaPressed = styleBool;
+	invrtButton.ariaPressed = invrtBool;
 }
 
 sliderInit();
@@ -61,3 +72,4 @@ buttonInit();
 
 replySlider.addEventListener('input', thresholdStore);
 styleButton.addEventListener('click', styleStore);
+invrtButton.addEventListener('click', invrtStore);

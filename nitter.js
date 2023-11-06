@@ -41,34 +41,81 @@ function init() {
 
 async function display() {
     let replyThreshold = await chromeFetch("threshold");
+    let replyInvert = await chromeFetch("invert");
+    let styleToggle = await chromeFetch("style");
 
     for (const post of posts) {
         const text = post.querySelector('.tweet-content');
         const likes = post.getAttribute('data-likes');
         const replies = post.getAttribute('data-comment');
 
-        const likeRatio = likes / maxLikes;
-        const replyRatio = replies / likes;
+        if (text === null)
+            continue;
+        else if (styleToggle) {
+            const likeRatio = likes / maxLikes;
+            const replyRatio = replies / likes;
 
-        if (replyRatio >= replyThreshold)
-            text.style.fontSize = replyRatio / replyThreshold + 'em';
-        else {
-            post.style.opacity = likeRatio;
+            switch (replyInvert) {
+                case true:
+                    if (replyRatio <= replyThreshold) {
+                        post.style.opacity = 1;
+                        text.style.fontSize = replyThreshold / replyRatio + 'em';
+                    } else {
+                        post.style.opacity = likeRatio;
+                        text.style.fontSize = '1em';
+                    }
+                    break;
+                case false:
+                    if (replyRatio >= replyThreshold) {
+                        post.style.opacity = 1;
+                        text.style.fontSize = replyRatio / replyThreshold + 'em';
+                    } else {
+                        post.style.opacity = likeRatio;
+                        text.style.fontSize = '1em';
+                    }
+                    break;
+            }
+        } else {
+            post.style.opacity = 1;
             text.style.fontSize = '1em';
         }
     }
 }
 
+function main() {
+    posts = document.querySelectorAll('.timeline-item:not(.show-more)');
+    // console.log(posts);
+    if (posts.length > 0) {
+        init();
+        display();
+    }
+}
+
+const callback = function(mutations) {
+    mutations.forEach(mutation => {
+        if (mutation.type === 'childList') {
+            main();
+        }
+    });
+}
+
+const target = document.querySelector('.timeline');
 let maxLikes = 0;
-const posts = document.querySelectorAll('.timeline-item:not(.show-more)');
-if (posts !== null) {
-    init();
-    display();
-}    
+let posts = [];
+
+const config = {
+    attributes: false, 
+    childList: true, 
+    characterData: true
+};  
+const observer = new MutationObserver(callback);
+observer.observe(target, config);
+
+main();
 
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
-        if (request.subject === 'update' && request.message === 'threshold')
+        if (request.subject === 'update')
             display();
     }
 );

@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Dumpster Fire",
+    "name": "Bitter",
     "version": "1.0.0",
-    "description": "What is happening?",
+    "description": "Emphasis on the Bitter",
     "web_accessible_resources": [
         {
             "resources": ["css/*"],
@@ -22,5 +22,9 @@
     ],
     "action": {
         "default_popup": "popup.html"
+    },
+    "icons": {
+        "48": "assets/icon48.png",
+        "128": "assets/icon128.png"
     }
 }

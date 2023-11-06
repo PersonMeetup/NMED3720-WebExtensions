@@ -54,6 +54,7 @@ function init() {
 
 async function display() {
     let replyThreshold = await chromeFetch("threshold");
+    let replyInvert = await chromeFetch("invert");
     let styleToggle = await chromeFetch("style");
 
     for (const post of posts) {
@@ -66,13 +67,26 @@ async function display() {
         else if (styleToggle) {
             const likeRatio = likes / maxLikes;
             const replyRatio = replies / likes;
-            
-            if (replyRatio >= replyThreshold) {
-                post.style.opacity = 1;
-                text.style.fontSize = replyRatio / replyThreshold + 'em';
-            } else {
-                post.style.opacity = likeRatio;
-                text.style.fontSize = '1em';
+
+            switch (replyInvert) {
+                case true:
+                    if (replyRatio <= replyThreshold) {
+                        post.style.opacity = 1;
+                        text.style.fontSize = replyThreshold / replyRatio + 'em';
+                    } else {
+                        post.style.opacity = likeRatio;
+                        text.style.fontSize = '1em';
+                    }
+                    break;
+                case false:
+                    if (replyRatio >= replyThreshold) {
+                        post.style.opacity = 1;
+                        text.style.fontSize = replyRatio / replyThreshold + 'em';
+                    } else {
+                        post.style.opacity = likeRatio;
+                        text.style.fontSize = '1em';
+                    }
+                    break;
             }
         } else {
             post.style.opacity = 1;
@@ -86,6 +100,7 @@ function logoReplace() {
         const labels = ['X', 'Premium'];
         for (const label of labels) {
             const svg = target.querySelector(`[aria-label="${label}"] svg`);
+            if (svg === null) continue;
             const oldLogo = svg.querySelector('g');
 
             const newLogo = document.createElementNS('http://www.w3.org/2000/svg', 'path');

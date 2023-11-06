@@ -1,0 +1,51 @@
+@import "reset.css";
+
+html {
+	width: 16rem;
+}
+
+header {
+	text-align: center;
+}
+main {
+	margin: 0.5rem 0.5rem 1rem;
+}
+footer {
+	border-top: 0.2rem solid #000;
+	font-size: 0.75em;
+	padding: 0.25rem;
+}
+
+.slider {
+	display: grid;
+  grid-template-columns: 2fr 1fr;
+	margin-bottom: 1rem;
+}
+.slider label {
+	font-weight: bold;
+}
+#value {
+	font-size: 1.15em;
+	align-self: center;
+}
+
+.buttons {
+	display: grid;
+  grid-template-columns: 1fr 1fr;
+	gap: 0.5rem;
+}
+button {
+	width: 10ch;
+	margin-inline: auto;
+	font-weight: bold;
+	border-radius: 0.2rem;
+	cursor: pointer;
+}
+button:not([aria-pressed="true"]) {
+	background-color: rgb(196, 120, 120);
+	border: 0.2rem solid rgb(168, 13, 13);
+}
+button[aria-pressed="true"] {
+	background-color: rgb(120, 196, 120);
+	border: 0.2rem solid rgb(18, 168, 13);
+}
