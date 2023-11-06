@@ -1,8 +1,8 @@
 {
     "manifest_version": 3,
-    "name": "Web Extensions Assignment",
+    "name": "Dumpster Fire",
     "version": "1.0.0",
-    "description": "Modify title and description later",
+    "description": "What is happening?",
     "web_accessible_resources": [
         {
             "resources": ["css/*"],
@@ -13,7 +13,7 @@
     "content_scripts": [
         {
             "matches": ["https://nitter.net/*"],
-            "js": ["script.js"]
+            "js": ["nitter.js"]
         },
         {
             "matches": ["https://twitter.com/*"],
