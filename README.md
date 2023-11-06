@@ -1,6 +1,6 @@
 # NMED3720-WebExtensions
 
-Bitter is an extension built to alter Twitter's interface based on the amount of engagement a tweet receives. Tweets are obscured depending on how many likes they have in relation to others on the page. While this alone should highlight what tweets to pay attention to (especially when viewing a tweets replies), the extension also boosts the font size of tweets given the amount of replies they have to their likes. Styling can be toggled and customized within the extension's plugin menu, with settings saved locally to the browser.
+*Bitter* is an extension built to alter Twitter's interface based on the amount of engagement a tweet receives. Tweets are obscured depending on how many likes they have in relation to others on the page. While this alone should highlight what tweets to pay attention to (especially when viewing a tweets replies), the extension also boosts the font size of tweets given the amount of replies they have to their likes. Styling can be toggled and customized within the extension's plugin menu, with settings saved locally to the browser.
 
 Last, but certainly not least, the extension replaces Twitter's new X logo with its former one. Out of all the changes this extension make's, this by far makes the greatest improvement to the user experience. Just ignore how the bird is upside down for the time being; we're bringing down some oxygen to revive it.
 
